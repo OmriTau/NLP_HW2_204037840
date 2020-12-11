@@ -82,7 +82,31 @@ def lm_wrapper(in_word_index, out_word_index, num_to_word_embedding, dimensions,
 
     # Construct the data batch and run you backpropogation implementation
     ### YOUR CODE HERE
-    raise NotImplementedError
+    in_word_index = np.array(in_word_index)
+    out_word_index = np.array(out_word_index)
+
+    idx = random.sample(range(len(in_word_index)), BATCH_SIZE)
+    # num_to_word_embedding = np.array(num_to_word_embedding)
+    cost = 0.0
+    grad = 0.0
+    for i in idx:
+        curr_in_word_index = np.array(in_word_index[i])
+        curr_out_word_index = np.array(out_word_index[i])
+
+        curr_data = np.array(num_to_word_embedding[curr_in_word_index])
+        labels = np.array(int_to_one_hot(curr_out_word_index, output_dim))
+        curr_cost, curr_grad = forward_backward_prop(curr_data[None,:], labels[None,:], params, dimensions)
+
+        cost += curr_cost
+        grad += curr_grad
+
+    # in_word_index = in_word_index[idx]
+    # out_word_index = out_word_index[idx]
+
+    # num_to_word_embedding = np.array(num_to_word_embedding)
+    # data = num_to_word_embedding[in_word_index,:]
+    # labels = int_to_one_hot((range(BATCH_SIZE), out_word_index), (BATCH_SIZE, output_dim))
+    # cost, grad = forward_backward_prop(data, labels, params, dimensions)
     ### END YOUR CODE
 
     cost /= BATCH_SIZE
@@ -99,9 +123,18 @@ def eval_neural_lm(eval_data_path):
     assert len(in_word_index) == len(out_word_index)
     num_of_examples = len(in_word_index)
 
-    perplexity = 0
+    perplexity = 0.0
     ### YOUR CODE HERE
-    raise NotImplementedError
+    # for i, word in enumerate(in_word_index):
+    num_to_word_embedding = np.array(num_to_word_embedding)
+    x = num_to_word_embedding[in_word_index]
+        # x = num_to_word_embedding[word]
+    perplexity, _, _ = forward(x, out_word_index, params, dimensions)
+        # p = forward(x, out_word_index[i], params, dimensions)
+    perplexity = np.sum(np.log2(perplexity)) / num_of_examples
+        # perplexity+= np.log2(p)
+    # perplexity = np.power(2, -perplexity/num_of_examples)
+    perplexity = np.power(2, -perplexity)
     ### END YOUR CODE
 
     return perplexity
