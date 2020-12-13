@@ -1,0 +1,5 @@
+[
+  "tests/test_submission.py::test_pdf", 
+  "tests/test_submission.py::test_npy", 
+  "tests/test_submission.py::test_notebook"
+]
