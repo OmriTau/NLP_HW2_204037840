@@ -125,15 +125,16 @@ def eval_neural_lm(eval_data_path):
 
     perplexity = 0.0
     ### YOUR CODE HERE
-    # for i, word in enumerate(in_word_index):
-    num_to_word_embedding = np.array(num_to_word_embedding)
-    x = num_to_word_embedding[in_word_index]
-        # x = num_to_word_embedding[word]
-    perplexity, _, _ = forward(x, out_word_index, params, dimensions)
-        # p = forward(x, out_word_index[i], params, dimensions)
-    perplexity = np.sum(np.log2(perplexity)) / num_of_examples
-        # perplexity+= np.log2(p)
-    # perplexity = np.power(2, -perplexity/num_of_examples)
+    in_word_index = np.array(in_word_index)
+    out_word_index = np.array(out_word_index)
+
+    data = np.array(num_to_word_embedding)[in_word_index]
+    #out_word_index = list(zip(np.array(range(len(out_word_index))), out_word_index))
+    out_word_index = (np.array(range(len(out_word_index))), out_word_index)
+    #print("out_word_index.shape = {}".format(out_word_index.shape))
+    prob, _, _ = forward(data, out_word_index, params, dimensions)
+    print("prob.shape = {}".format(prob.shape))
+    perplexity = np.mean(np.log2(prob))
     perplexity = np.power(2, -perplexity)
     ### END YOUR CODE
 
